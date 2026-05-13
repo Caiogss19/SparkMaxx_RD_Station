@@ -1,20 +1,22 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { 
-  LayoutDashboard, 
-  Mail, 
-  Workflow, 
-  PanelTop, 
+import {
+  LayoutDashboard,
+  Mail,
+  Workflow,
+  PanelTop,
   LogOut,
-  Zap
+  Zap,
+  Activity
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { name: 'Visão Geral', path: '/overview', icon: LayoutDashboard },
-  { name: 'E-mails', path: '/emails', icon: Mail },
   { name: 'Workflows', path: '/workflows', icon: Workflow },
+  { name: 'E-mails', path: '/emails', icon: Mail },
   { name: 'LP & Forms', path: '/assets', icon: PanelTop },
+  { name: 'Sincronizações', path: '/sync', icon: Activity },
 ];
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {

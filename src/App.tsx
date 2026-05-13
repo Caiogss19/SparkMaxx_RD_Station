@@ -8,6 +8,7 @@ import { Overview } from './pages/Overview';
 import { Emails } from './pages/Emails';
 import { Workflows } from './pages/Workflows';
 import { Assets } from './pages/Assets';
+import { SyncLog } from './pages/SyncLog';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
                     <Route path="/emails" element={<Emails />} />
                     <Route path="/workflows" element={<Workflows />} />
                     <Route path="/assets" element={<Assets />} />
+                    <Route path="/sync" element={<SyncLog />} />
                   </Routes>
                 </DashboardLayout>
               </ProtectedRoute>
