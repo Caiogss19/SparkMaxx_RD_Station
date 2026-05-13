@@ -68,6 +68,12 @@ export function Overview() {
       const workflows = (workflowsRes.data || []) as Pick<WorkflowRow, 'id' | 'name' | 'status'>[];
       const lastSync = syncRes.data?.[0] as SyncLog | undefined;
 
+      console.log('[Overview] metrics rows:', metrics.length, 'workflows:', workflows.length);
+      console.log('[Overview] metricsRes.error:', metricsRes.error);
+      console.log('[Overview] workflowsRes.error:', workflowsRes.error);
+      console.log('[Overview] first metric:', metrics[0]);
+      console.log('[Overview] unique snapshot_dates:', Array.from(new Set(metrics.map(m => m.snapshot_date))));
+
       const acc = { sent: 0, delivered: 0, opened: 0, clicked: 0, bounced: 0, unsubscribed: 0 };
       const prevAcc = { sent: 0, delivered: 0, opened: 0, clicked: 0 };
       const workflowAgg = new Map<string, { sent: number; opened: number; delivered: number }>();
