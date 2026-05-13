@@ -58,20 +58,20 @@ export function Overview() {
   async function loadData() {
     setError(null);
     try {
-      const [metricsRes, workflowsRes, syncRes] = await Promise.all([
+      const [metricsRes, workflowsRes, syncRes] = await Promise.allSettled([
         supabase.from('rd_workflow_metrics').select('*').order('snapshot_date', { ascending: false }),
         supabase.from('rd_workflows').select('id, name, status'),
         supabase.from('rd_sync_log').select('*').order('created_at', { ascending: false }).limit(1),
       ]);
 
-      const metrics = (metricsRes.data || []) as WorkflowMetric[];
-      const workflows = (workflowsRes.data || []) as Pick<WorkflowRow, 'id' | 'name' | 'status'>[];
-      const lastSync = syncRes.data?.[0] as SyncLog | undefined;
+      const metrics: WorkflowMetric[] = metricsRes.status === 'fulfilled' ? (metricsRes.value.data || []) as WorkflowMetric[] : [];
+      const workflows: Pick<WorkflowRow, 'id' | 'name' | 'status'>[] = workflowsRes.status === 'fulfilled' ? (workflowsRes.value.data || []) as Pick<WorkflowRow, 'id' | 'name' | 'status'>[] : [];
+      const lastSync: SyncLog | undefined = syncRes.status === 'fulfilled' ? syncRes.value.data?.[0] as SyncLog | undefined : undefined;
 
-      console.log('[Overview] metrics rows:', metrics.length, 'workflows:', workflows.length);
-      console.log('[Overview] metricsRes.error:', metricsRes.error);
-      console.log('[Overview] workflowsRes.error:', workflowsRes.error);
-      console.log('[Overview] first metric:', metrics[0]);
+      console.log('[Overview] metrics:', metrics.length, 'workflows:', workflows.length);
+      if (metricsRes.status === 'fulfilled') console.log('[Overview] metricsRes.error:', metricsRes.value.error, 'sample:', metrics[0]);
+      if (workflowsRes.status === 'fulfilled') console.log('[Overview] workflowsRes.error:', workflowsRes.value.error);
+      if (syncRes.status === 'fulfilled') console.log('[Overview] syncRes.error:', syncRes.value.error);
       console.log('[Overview] unique snapshot_dates:', Array.from(new Set(metrics.map(m => m.snapshot_date))));
 
       const acc = { sent: 0, delivered: 0, opened: 0, clicked: 0, bounced: 0, unsubscribed: 0 };
